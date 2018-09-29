@@ -1,6 +1,5 @@
 # angular-protractor-cucumber
 
-#See doc in
 Forked from (https://github.com/donkeycode/angular-protractor-cucumber/wiki)
 
 New :
