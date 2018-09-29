@@ -1,7 +1,7 @@
 # angular-protractor-cucumber
 
 #See doc in
-Forked from [Wiki](https://github.com/donkeycode/angular-protractor-cucumber/wiki)
+Forked from (https://github.com/donkeycode/angular-protractor-cucumber/wiki)
 
 New :
 - Support cucumber js releases >= 2.x.x
