@@ -1,9 +1,7 @@
 # test/e2e/stepsDefinitionsPredefined.feature
 Feature: Test predefined step definitions
 
-Scenario: page.js - wait few seconds
-    Given I wait 1 seconds
-
-Scenario: page.js - open url - page without angular
+Scenario: page.js - verify 60 seconds setup by env - wait 6 seconds (default is 5)
     Given I switch OFF angular
     Given I try visit the page "testPage"
+    Given I wait 6 seconds

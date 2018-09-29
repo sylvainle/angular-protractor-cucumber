@@ -2,9 +2,13 @@
 
 Forked from https://github.com/donkeycode/angular-protractor-cucumber/
 
-New :
-- Support cucumber js releases >= 2.x.x
-- Test added to  angular-protractor-cucumber
+BREAKING CHANGES :
+- Support cucumber js releases >= 2.x.x (but releases < 2.0.0 must stay on forked lib)
+- Steps and support file upgraded
+- Hooks upgraded
+
+New features :
+- Test added to angular-protractor-cucumber
 
 Usage :
 - npm install angular-protractor-cucumber

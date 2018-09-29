@@ -2,16 +2,17 @@
 
 exports.config = {
     allScriptsTimeout: 99999,
+    //getPageTimeout: 50000,
 
     // The address of a running selenium server.
-    seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
+    //seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
     directConnect: true,
 
     // The location of the selenium standalone server .jar file, relative
     // to the location of this config. If no other method of starting selenium
     // is found, this will default to
     // node_modules/protractor/selenium/selenium-server...
-    seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-3.14.0.jar',
+    //seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-3.14.0.jar',
 
     // The port to start the selenium server on, or null if the server should
     // find its own unused port.
@@ -22,7 +23,8 @@ exports.config = {
         'browserName': 'chrome'
     },
 
-    baseUrl: 'http://www.google.fr',
+    //baseUrl: 'http://www.google.fr',
+    baseUrl: 'https://angularjs.org',
 
     framework: 'custom',
     frameworkPath: 'node_modules/protractor-cucumber-framework',

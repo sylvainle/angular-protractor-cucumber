@@ -24,6 +24,12 @@ module.exports = function Context() {
         currentScenario: null,
 
         /**
+         * Current running step number
+         * @type {object}
+         */
+        currentStepNum: -1,
+
+        /**
          * Current running step
          * @type {object}
          */
@@ -111,6 +117,7 @@ module.exports = function Context() {
          */
         setCurrentScenario: function (scenario) {
             this.currentScenario = scenario;
+            //this.currentStepNum = -1;
 
             return this;
         },

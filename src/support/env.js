@@ -1,5 +1,3 @@
-var configure = function () {
-    this.setDefaultTimeout(60 * 1000);
-};
+var {setDefaultTimeout} = require('cucumber');
 
-module.exports = configure;
+setDefaultTimeout(process.env.DEFAULT_TIMEOUT || 60000);

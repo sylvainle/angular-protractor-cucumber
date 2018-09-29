@@ -254,10 +254,3 @@ function CustomWorld() {
 }
 
 setWorldConstructor(CustomWorld);
-
-module.exports = function () {
-
-    this.World = function World() {
-
-    };
-};
