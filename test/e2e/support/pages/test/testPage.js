@@ -1,4 +1,4 @@
-// e2e/support/pages/googleTestPage.js
+// e2e/support/pages/test/testPage.js
 
 'use strict';
 

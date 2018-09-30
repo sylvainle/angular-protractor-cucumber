@@ -1,6 +1,10 @@
 var context = require('../../../src/support/context');
-var {Given, When, Then} = require('cucumber');
+var {Before, After, BeforeAll, AfterAll, Given, When, Then} = require('cucumber');
 var webdriver = require('selenium-webdriver');
+
+Before(function() {
+  context.debug = true;
+});
 
 // No angular
 Given(/^No content - sync$/, function () {

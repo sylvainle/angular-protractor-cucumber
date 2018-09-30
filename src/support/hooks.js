@@ -1,14 +1,14 @@
 var { After, Before, AfterAll, BeforeAll, setDefinitionFunctionWrapper } = require('cucumber');
 var context = require('./context');
 
-const debugThis = false;
-
 // TODO: If we add anothers hooks After/Before/AfterAll/BeforeAll,
 //       setDefinitionFunctionWrapper functions may fail
 
 // Before each scenario
 // ! DO NOT DELETE or COMMENT OUT !
 Before(function (scenario, callback) {
+  if (context.debug) console.log('Before (before each scenario)');
+
   //context.something();
 
   callback();
@@ -17,6 +17,8 @@ Before(function (scenario, callback) {
 // After each scenario
 // ! DO NOT DELETE or COMMENT OUT !
 After(function (scenario, callback) {
+  if (context.debug) console.log('After (after each scenario)');
+
   //context.something();
 
   callback();
@@ -25,8 +27,9 @@ After(function (scenario, callback) {
 // Before all feature files (no world so no this !)
 // ! DO NOT DELETE or COMMENT OUT !
 BeforeAll(function (callback) {
+  if (context.debug) console.log('BeforeAll (before all features files)');
+
   //context.something();
-  if (debugThis) console.log('BeforeAllBeforeAllBeforeAll');
 
   callback();
 });
@@ -34,6 +37,8 @@ BeforeAll(function (callback) {
 // After all feature files (no world so no this !)
 // ! DO NOT DELETE or COMMENT OUT !
 AfterAll(function (callback) {
+  if (context.debug) console.log('AfterAll (after all features files)');
+
   //context.something();
 
   callback();
@@ -75,13 +80,18 @@ setDefinitionFunctionWrapper(function(fn, opts) {
       var incrementCurrentStepNum = false;
       try {
         // TODO: Bad triggering of a before/after event (trapped)
-        
+
         /* ******* BEFORE EACH FEATURE (file) ******** */
         if (isABeforeScenarioEvent(args[0]) && context.getCurrentFeature() !== args[0]) {
           var uri = args[0].sourceLocation.uri;
-          if (debugThis) console.log('Before feature (file) : ' + uri);
+          if (context.debug) console.log('Wrapped Before each feature file : ' + uri);
           context.setCurrentFeature(args[0]);
-          //console.log(args[0]);
+
+          // Cleanup
+          if (context.database) {
+              context.database.clear();
+              context.database = null;
+          }
 
           // Add actions here
         }
@@ -90,7 +100,7 @@ setDefinitionFunctionWrapper(function(fn, opts) {
         if (isAnAfterScenarioEvent(args[0]) ||
             isAnAfterStepEvent()) {
           incrementCurrentStepNum = true;
-          if (debugThis) console.log('After step : ' + context.currentScenario.pickle.steps[context.currentStepNum].text);
+          if (context.debug) console.log('Wrapped After each step : ' + context.currentScenario.pickle.steps[context.currentStepNum].text);
 
           // Add actions here
         }
@@ -99,9 +109,9 @@ setDefinitionFunctionWrapper(function(fn, opts) {
         if (isAnAfterScenarioEvent(args[0])) {
           var pickle = args[0].pickle;
           var result = args[0].result;
-          if (debugThis) console.log('After scenario : ' + pickle.name + ' ( ' + (context.currentStepNum+1) + ' steps)');
-          if (debugThis) console.log(result);
-          if (debugThis) console.log();
+          if (context.debug) console.log('Wrapped After each scenario : ' + pickle.name + ' ( ' + (context.currentStepNum+1) + ' steps)');
+          if (context.debug) console.log(result);
+          if (context.debug) console.log();
 
           // Add actions here
         }
@@ -112,7 +122,7 @@ setDefinitionFunctionWrapper(function(fn, opts) {
           var result = args[0].result;
           context.currentStepNum = -1;
           context.setCurrentScenario(args[0]);
-          if (debugThis) console.log('Before scenario : ' + pickle.name);
+          if (context.debug) console.log('Wrapped Before each scenario : ' + pickle.name);
 
           // Add actions here
         }
@@ -123,7 +133,7 @@ setDefinitionFunctionWrapper(function(fn, opts) {
              isABeforeStepEvent()) {
           incrementCurrentStepNum = true;
           context.setCurrentStep(context.currentScenario.pickle.steps[context.currentStepNum+1]);
-          if (debugThis) console.log('Before step : ' + context.currentScenario.pickle.steps[context.currentStepNum+1].text);
+          if (context.debug) console.log('Wrapped Before each step : ' + context.currentScenario.pickle.steps[context.currentStepNum+1].text);
 
           // Add actions here
         }
@@ -142,34 +152,3 @@ setDefinitionFunctionWrapper(function(fn, opts) {
     }
   }
 });
-
-
-module.exports = function Hooks() {
-
-    this.registerHandler('BeforeFeature', function (feature, callback) {
-        console.log('BeforeFeature');
-        context.setCurrentFeature(feature);
-
-        callback();
-    });
-
-    /**
-     * Clear database if mocked with HttpBackend
-     */
-    this.registerHandler('AfterFeature', function (feature, callback) {
-        console.log('AfterFeature');
-        if (context.database) {
-            context.database.clear();
-            context.database = null;
-        }
-
-        callback();
-    });
-
-    this.registerHandler('BeforeStep', function (step, callback) {
-        console.log('BeforeStep');
-        context.setCurrentStep(step);
-
-        callback();
-    });
-};

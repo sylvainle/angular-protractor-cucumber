@@ -1,6 +1,8 @@
 var {Given, When, Then} = require('cucumber');
 var context = require('../support/context');
 
+// TODO: Need to be tested
+
 /*
  * Show a modal
  */
@@ -38,5 +40,4 @@ Then(/^I accept confirm modal$/, function (callback) {
     } else {
         _this.handleError("Confirm button is not present", callback);
     }
-
 });

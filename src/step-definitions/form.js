@@ -1,6 +1,8 @@
 var {Given, When, Then} = require('cucumber');
 var context = require('../support/context');
 
+// TODO: Need to be tested
+
 /**
  *  Check select box by ngModel
  */

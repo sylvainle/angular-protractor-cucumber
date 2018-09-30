@@ -2,6 +2,8 @@
 
 var faker = require('faker');
 
+// TODO: Need to be tested
+
 module.exports = function DataGeneratorHelper() {
     var memorized_strings = {};
 

@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO: Need to be tested
+
 module.exports = function StringHelper() {
     return {
         /**

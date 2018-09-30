@@ -1,4 +1,4 @@
-# test/e2e/stepsDefinitionsPredefined.feature
+# test/e2e/supportEnv.feature
 Feature: Test predefined step definitions
 
 Scenario: page.js - verify 60 seconds setup by env - wait 6 seconds (default is 5)

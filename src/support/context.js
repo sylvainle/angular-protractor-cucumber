@@ -6,6 +6,12 @@ var $q = require("q");
 module.exports = function Context() {
     return {
         /**
+         * debug
+         * @type {boolean}
+         */
+        debug: false,
+
+        /**
          * Current page instance
          * @type {object}
          */
