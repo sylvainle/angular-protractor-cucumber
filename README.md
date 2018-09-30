@@ -9,6 +9,7 @@ BREAKING CHANGES :
 
 New features :
 - Test added to angular-protractor-cucumber
+- Add beforeFeature (file) capabilities
 
 Usage :
 - npm install angular-protractor-cucumber
@@ -16,3 +17,4 @@ Usage :
 - [windows] close and reopen cmd
 - exec "webdriver-manager update"
 - update protractor.conf with your current seleniumServerJar release
+- npm test

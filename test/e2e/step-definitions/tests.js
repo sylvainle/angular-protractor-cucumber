@@ -72,3 +72,16 @@ Then('I see step name coming from setCurrentStep', function (callback) {
     callback(e);
   }
 });
+
+Then('I see feature name {string} coming from setCurrentFeature', function (aFeatureName, callback) {
+  try {
+    featureName = context.getCurrentFeature().sourceLocation.uri;
+    if (aFeatureName == featureName) {
+      callback();
+    } else {
+      callback('Text should be "' + aFeatureName + '" but is "' + featureName + '"');
+    }
+  } catch (e) {
+    callback(e);
+  }
+});
