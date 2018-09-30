@@ -16,7 +16,7 @@ exports.config = {
 
     // The port to start the selenium server on, or null if the server should
     // find its own unused port.
-    seleniumPort: 4444,
+    //seleniumPort: 4444,
 
     // Capabilities to be passed to the webdriver instance.
     capabilities: {
