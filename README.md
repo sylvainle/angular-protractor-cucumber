@@ -15,8 +15,16 @@ New features :
 
 Usage :
 - npm install angular-protractor-cucumber
-- add node_modules/.bin to your environment paths
-- [windows] close and reopen cmd
+- [if needed] add node_modules/.bin to your environment paths
+- [under windows] close and reopen cmd
 - exec "webdriver-manager update"
-- update protractor.conf with your current seleniumServerJar release
-- npm test
+- create/update your protractor.conf.js with your downloaded seleniumServerJar release version
+- create/update your tests (example under node_modules/angular-protractor-cucumber/test)
+- available steps are under node_modules/angular-protractor-cucumber/src/step-definitions
+- available support content is under node_modules/angular-protractor-cucumber/src/support
+- don't forget to include angular-protractor-cucumber step-definitions and support content in your protractor.conf.js (cucumberOpts.require)
+- test it with a simple example :
+
+    Feature: Simple feature
+    Scenario: Simple test
+      Given I wait 2 seconds
