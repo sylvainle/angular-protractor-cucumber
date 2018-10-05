@@ -1,60 +1,56 @@
 var { After, Before, AfterAll, BeforeAll, setDefinitionFunctionWrapper } = require('cucumber');
 var context = require('./context');
 
-// TODO: If we add anothers hooks After/Before/AfterAll/BeforeAll,
-//       setDefinitionFunctionWrapper functions may fail
-
 // Before each scenario
-// ! DO NOT DELETE or COMMENT OUT !
 Before(function (scenario, callback) {
-  if (context.debug) console.log('Before (before each scenario)');
-
-  //context.something();
-
-  callback();
+  try {
+    context.setCurrentScenario(scenario);
+    if (context.debug) console.log('Classic Before each scenario : ' + scenario.pickle.name);
+  } finally {
+    callback();
+  }
 });
 
 // After each scenario
-// ! DO NOT DELETE or COMMENT OUT !
 After(function (scenario, callback) {
-  if (context.debug) console.log('After (after each scenario)');
-
-  //context.something();
-
-  callback();
+  try {
+    if (context.debug) console.log('Classic After each scenario : ' + scenario.pickle.name + ' - duration (s) : ' + scenario.result.duration + ' - status ' + scenario.result.status);
+    if (context.debug) console.log();
+    // Cleanup
+    /*if (context.database) {
+        context.database.clear();
+        context.database = null;
+    }*/
+  } finally {
+    callback();
+  }
 });
 
 // Before all feature files (no world so no this !)
-// ! DO NOT DELETE or COMMENT OUT !
 BeforeAll(function (callback) {
-  if (context.debug) console.log('BeforeAll (before all features files)');
-
-  //context.something();
-
-  callback();
+  try {
+    if (context.debug) console.log('Classic BeforeAll features files');
+  } finally {
+    callback();
+  }
 });
 
 // After all feature files (no world so no this !)
-// ! DO NOT DELETE or COMMENT OUT !
 AfterAll(function (callback) {
-  if (context.debug) console.log('AfterAll (after all features files)');
-
+  if (context.debug) console.log('Classic AfterAll features files');
   //context.something();
 
   callback();
 });
 
-// Before each feature file
-// Before each scenario (another way)
-// Before each step
-// After each step
-// After each scenario (another way)
+// Wrapped
 function isFunction(objectToCheck) {
   return objectToCheck && {}.toString.call(objectToCheck) === '[object Function]';
 };
 function isABeforeScenarioEvent(objectToCheck) {
   return objectToCheck &&
         !isFunction(objectToCheck) &&
+        context.currentScenario === null &&
         typeof objectToCheck.pickle !== 'undefined' && objectToCheck.pickle !== null &&
        (typeof objectToCheck.result === 'undefined' || objectToCheck.result === null);
 };
@@ -62,13 +58,23 @@ function isAnAfterScenarioEvent(objectToCheck) {
   return objectToCheck &&
         !isFunction(objectToCheck) &&
         typeof objectToCheck.pickle !== 'undefined' && objectToCheck.pickle !== null &&
-        typeof objectToCheck.result !== 'undefined' && objectToCheck.result !== null;
+        typeof objectToCheck.result !== 'undefined' && objectToCheck.result !== null &&
+        (context.currentStepNum+1) === context.currentScenario.pickle.steps.length;
 };
-function isABeforeStepEvent() {
-  return context.currentStepNum >= -1 && context.currentStepNum < context.currentScenario.pickle.steps.length;
+function isABeforeStepEvent(objectToCheck) {
+  return typeof objectToCheck !== 'undefined' && objectToCheck !== null &&
+         typeof objectToCheck.pickle !== 'undefined' && objectToCheck.pickle !== null &&
+         typeof objectToCheck.pickle.steps !== 'undefined' && objectToCheck.pickle.steps !== null &&
+         (typeof objectToCheck.result === 'undefined' || objectToCheck.result === null) &&
+         context.currentStepNum >= 0 &&
+         context.currentStepNum < objectToCheck.pickle.steps.length;
 };
-function isAnAfterStepEvent() {
-  return context.currentStepNum >= 0 && context.currentStepNum < context.currentScenario.pickle.steps.length;
+function isAnAfterStepEvent(objectToCheck) {
+  return objectToCheck &&
+        !isFunction(objectToCheck) &&
+        typeof objectToCheck.pickle !== 'undefined' && objectToCheck.pickle !== null &&
+        typeof objectToCheck.result !== 'undefined' && objectToCheck.result !== null &&
+        context.currentStepNum < context.currentScenario.pickle.steps.length;
 };
 setDefinitionFunctionWrapper(function(fn, opts) {
   var _fn = fn;
@@ -82,71 +88,52 @@ setDefinitionFunctionWrapper(function(fn, opts) {
         // TODO: Bad triggering of a before/after event (trapped)
 
         /* ******* BEFORE EACH FEATURE (file) ******** */
-        if (isABeforeScenarioEvent(args[0]) && context.getCurrentFeature() !== args[0]) {
-          var uri = args[0].sourceLocation.uri;
-          if (context.debug) console.log('Wrapped Before each feature file : ' + uri);
+        if (isABeforeScenarioEvent(args[0]) &&
+            context.getCurrentFeature() !== args[0]) {
+
           context.setCurrentFeature(args[0]);
-
-          // Cleanup
-          if (context.database) {
-              context.database.clear();
-              context.database = null;
-          }
-
-          // Add actions here
-        }
-
-        /* ***** AFTER EACH STEP ***** */
-        if (isAnAfterScenarioEvent(args[0]) ||
-            isAnAfterStepEvent()) {
-          incrementCurrentStepNum = true;
-          if (context.debug) console.log('Wrapped After each step : ' + context.currentScenario.pickle.steps[context.currentStepNum].text);
-
-          // Add actions here
-        }
-
-        /* ***** AFTER EACH SCENARIO ***** */
-        if (isAnAfterScenarioEvent(args[0])) {
-          var pickle = args[0].pickle;
-          var result = args[0].result;
-          if (context.debug) console.log('Wrapped After each scenario : ' + pickle.name + ' ( ' + (context.currentStepNum+1) + ' steps)');
-          if (context.debug) console.log(result);
-          if (context.debug) console.log();
-
-          // Add actions here
-        }
-
-        /* ***** BEFORE EACH SCENARIO ***** */
-        if (isABeforeScenarioEvent(args[0])) {
-          var pickle = args[0].pickle;
-          var result = args[0].result;
-          context.currentStepNum = -1;
-          context.setCurrentScenario(args[0]);
-          if (context.debug) console.log('Wrapped Before each scenario : ' + pickle.name);
-
-          // Add actions here
+          context.setCurrentScenario(null);
+          context.setCurrentStep(null);
+          if (context.debug) console.log('Wrapped Before each feature file : ' + args[0].sourceLocation.uri);
         }
 
         /* ***** BEFORE EACH STEP ***** */
-        if (!isABeforeScenarioEvent(args[0]) &&
-            !isAnAfterScenarioEvent(args[0]) &&
-             isABeforeStepEvent()) {
-          incrementCurrentStepNum = true;
-          context.setCurrentStep(context.currentScenario.pickle.steps[context.currentStepNum+1]);
-          if (context.debug) console.log('Wrapped Before each step : ' + context.currentScenario.pickle.steps[context.currentStepNum+1].text);
+        /* if (isABeforeStepEvent(args[0])) {
+          //if (context.debug) console.log('Wrapped Before each step (step num : ' + context.currentStepNum + ') :');
+        }*/
 
-          // Add actions here
+        /* ***** AFTER EACH STEP ***** */
+        if (isAnAfterStepEvent(args[0])) {
+          if (context.debug) console.log('Wrapped After each step - duration (s) : ' + args[0].result.duration + ' - status ' + args[0].result.status);
+          //if (context.debug) console.log(args[0]);
         }
+
+        /* ***** AFTER EACH SCENARIO ***** */
+        /*if (isAnAfterScenarioEvent(args[0])) {
+          if (context.debug) console.log('Wrapped After each scenario : ' + pickle.name + ' ( ' + (context.currentStepNum+1) + ' steps)');
+        }*/
+
+        /* ***** BEFORE EACH SCENARIO ***** */
+        /*if (isABeforeScenarioEvent(args[0])) {
+          if (context.debug) console.log('Wrapped Before each scenario : ' + pickle.name);
+        }*/
+
       } catch (e) {
-        console.log('ERREUR : ' + e);
-        console.log('currentFeature : ' + context.currentFeature);
-        console.log('currentScenario : ' + context.currentScenario);
-        console.log('currentStep : ' + context.currentStep);
-        console.log('currentStepNum : ' + context.currentStepNum);
+        console.log('!!! ERREUR : ' + e);
+        console.log('! currentFeature : ');
+        console.log(context.currentFeature);
+        console.log('! currentScenario : ');
+        console.log(context.currentScenario);
+        console.log('! currentStep : ');
+        console.log(context.currentStep);
+        console.log('! currentStepNum : ' + context.currentStepNum);
         console.log(e);
         console.log(args);
+        console.log();
       } finally {
-        if (incrementCurrentStepNum) context.currentStepNum++;
+        /*if (incrementCurrentStepNum) {
+          context.currentStepNum++;
+        }*/
         return _fn.apply(this, args);
       }
     }

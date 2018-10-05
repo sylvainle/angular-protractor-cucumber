@@ -33,7 +33,7 @@ module.exports = function Context() {
          * Current running step number
          * @type {object}
          */
-        currentStepNum: -1,
+        currentStepNum: 0,
 
         /**
          * Current running step

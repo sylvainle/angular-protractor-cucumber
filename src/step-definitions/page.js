@@ -425,3 +425,8 @@ Then(/^I should not see element "([^"]*)"$/, function (elementClass, callback) {
         _this.delayCallback(callback);
     });
 });
+
+Then('J\'écris {string} dans la console', function (chaine, callback) {
+    console.log(chaine);
+    callback();
+});
