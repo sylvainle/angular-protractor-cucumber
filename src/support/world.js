@@ -219,7 +219,7 @@ function CustomWorld() {
       var _this = this;
 
       browser.takeScreenshot().then(function (imageData) {
-          var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
+          /*var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
           var formatScenario = helperString.slugify(context.getCurrentScenario().getName());
 
           var token = formatFeature + '_' + formatScenario;
@@ -228,7 +228,7 @@ function CustomWorld() {
           var pngStream = fs.createWriteStream(path + token + '_screenshot.png');
 
           pngStream.write(new Buffer(imageData, 'base64'));
-          pngStream.end();
+          pngStream.end();*/
 
           _this.delayCallback(function handleErrorCallback() {
               callback(new Error(error));

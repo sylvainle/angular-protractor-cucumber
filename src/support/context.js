@@ -55,7 +55,7 @@ module.exports = function Context() {
         loadPageInstance: function (pageName) {
             var deffered = $q.defer();
             // TODO: WTF c'est quoi ce chemin en dur !
-            glob(process.cwd() + '/**/support/pages/**/' + pageName+".js", {}, function (er, files) {
+            glob(process.cwd() + '/test/e2e/support/pages/**/' + pageName+".js", {}, function (er, files) {
                 if (files.length === 0) {
                     deffered.reject("Page "+pageName+" not found !");
 
