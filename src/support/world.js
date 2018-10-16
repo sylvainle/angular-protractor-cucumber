@@ -7,14 +7,20 @@ var config = require('./config');
 var helperString = require('./helper/string');
 var dataGenerator = require('./helper/data-generator');
 
-function CustomWorld() {
+function CustomWorld({attach, parameters}) {
+  // Keep World capabilities
+  this.attach = attach;
+  this.parameters = parameters;
+  /*this.driver = new seleniumWebdriver.Builder()
+    .forBrowser('firefox')
+    .build();*/
 
   // Returns a promise that resolves to the element
   this.waitForElement = function(locator) {
     var condition = seleniumWebdriver.until.elementLocated(locator);
     return this.driver.wait(condition)
   }
-
+  
   /**
    * try Visit the given page without check is on page
    * @param {Promise} pageInstancePromise
