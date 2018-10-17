@@ -51,6 +51,7 @@ exports.config = {
 ```
 - test it with a simple example :
 ```
+
 Feature: Simple feature
 Scenario: Simple test
 Given I wait 2 seconds
